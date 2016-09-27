@@ -28,6 +28,9 @@ public class Attacker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		// TODO: Don't start targeting when Unit already busy (non-idle) with non-attack action
+
 		AimAndShoot ();
 
 		if (currentTarget != null) {
@@ -183,12 +186,12 @@ public class Attacker : MonoBehaviour {
 			// no valid target
 			if (isAttacking) {
 				// we have stopped attacking
-				StopAttacking ();
+				StopAttack ();
 			}
 		} else {
 			if (!isAttacking) {
 				// we have started attacking
-				StartAttacking ();
+				StartAttack ();
 			}
 
 
@@ -207,7 +210,7 @@ public class Attacker : MonoBehaviour {
 		// create a new bullet
 		var bulletObj = (GameObject)Instantiate(BulletPrefab, transform.position, GetRotationToward(currentTarget.transform));
 
-		// set faction
+		// set bullet faction
 		FactionManager.SetFaction (bulletObj, gameObject);
 
 		// set velocity
@@ -221,12 +224,12 @@ public class Attacker : MonoBehaviour {
 		lastShotTime = Time.time;
 	}
 	
-	void StartAttacking() {
+	void StartAttack() {
 		isAttacking = true;
 		SendMessage ("OnAttackStart", SendMessageOptions.DontRequireReceiver);
 	}
 	
-	void StopAttacking() {
+	void StopAttack() {
 		isAttacking = false;
 		SendMessage ("OnAttackStop", SendMessageOptions.DontRequireReceiver);
 	}

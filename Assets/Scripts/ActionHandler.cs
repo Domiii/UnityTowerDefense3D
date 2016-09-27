@@ -18,7 +18,7 @@ public class ActionHandler : MonoBehaviour {
 		//DoCancelCurrentAction ();
 
 		if (action.HasActionChanged) {
-			SendMessage ("End" + lastActionName, action, SendMessageOptions.DontRequireReceiver);
+			SendMessage ("Stop" + lastActionName, action, SendMessageOptions.DontRequireReceiver);
 			SendMessage ("Start" + action.Name, action, SendMessageOptions.DontRequireReceiver);
 		}
 
