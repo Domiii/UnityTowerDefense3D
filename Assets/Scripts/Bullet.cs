@@ -6,7 +6,6 @@ public class Bullet : MonoBehaviour {
 	public float DamageMin = 10;
 	public float DamageMax = 20;
 	public float Speed = 1;
-	public float MaxLifeTimeSeconds = 10;
 
 	float startTime;
 	bool hasHit = false;
@@ -15,18 +14,13 @@ public class Bullet : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		startTime = Time.time;
+		Destroy(gameObject, 10);		// destroy after at most 10 seconds
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		var now = Time.time;
 		var lifeTime = now - startTime;
-
-		if (lifeTime >= MaxLifeTimeSeconds) {
-			// missed target
-			Destroy(gameObject);
-			return;
-		}
 	}
 	
 	void OnProjectileHit(Collider2D col) {

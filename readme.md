@@ -26,5 +26,5 @@ TODO
 DONE
 * setup basic level, w/ 2 HQs + player
 * Navmesh + Player navigation
-* Camera controls - [tilt] up+down, [zoom] scrollwheel, [reset] 1
+* Camera controls - [tilt] up+down, [zoom] scrollwheel
 * Action handling (Move, Attack, Idle)

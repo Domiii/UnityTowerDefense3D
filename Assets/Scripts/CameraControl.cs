@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameInputManager : MonoBehaviour {
-	public float CameraSensitivity = 30;
-	public float CameraMaxZ = -10;
-	public float CameraMinZ = -50;
-	public float CameraMaxTilt = 60;
-	public float CameraMinTilt = 10;
+public class CameraControl : MonoBehaviour {
+	public float zoomSpeed = 30;		// meters/second
+	public float tiltSpeed = 30;		// degrees/second
+	public float maxZ = -10;
+	public float minZ = -50;
+	public float maxTilt = 60;
+	public float minTilt = 10;
 
 	Vector3 defaultCameraPos;
 	Quaternion defaultCameraRotation;
@@ -46,9 +47,11 @@ public class GameInputManager : MonoBehaviour {
 	void UpdateCameraZoom() {
 		var dPos = Input.GetAxis ("Mouse ScrollWheel");
 		if (dPos != 0) {
-			dPos = dPos * CameraSensitivity * Time.deltaTime;
+			var zoomDirection = dPos/Mathf.Abs(dPos);		// normalize
+
+			dPos = zoomDirection * zoomSpeed * Time.deltaTime;
 			var newPos = Camera.main.transform.localPosition;
-			newPos.z = Mathf.Clamp (newPos.z + dPos, CameraMinZ, CameraMaxZ);
+			newPos.z = Mathf.Clamp (newPos.z + dPos, minZ, maxZ);
 			Camera.main.transform.localPosition = newPos;
 		}
 	}
@@ -56,11 +59,11 @@ public class GameInputManager : MonoBehaviour {
 	void UpdateCameraTilt() {
 		var dTilt = Input.GetAxis ("Vertical");
 		if (dTilt != 0) {
-			dTilt = dTilt * CameraSensitivity * Time.deltaTime;
+			dTilt = dTilt * tiltSpeed * Time.deltaTime;
 
 			var localRotation = CameraRotation;
 			var newAngles = localRotation.eulerAngles;
-			newAngles.x = Mathf.Clamp (newAngles.x + dTilt, CameraMinTilt, CameraMaxTilt);
+			newAngles.x = Mathf.Clamp (newAngles.x + dTilt, minTilt, maxTilt);
 			localRotation.eulerAngles = newAngles;
 			CameraRotation = localRotation;
 		}
