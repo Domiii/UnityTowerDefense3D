@@ -4,11 +4,11 @@ using System.Linq;
 
 
 /// <summary>
-/// 2D adaption of the famous DontGoThroughThings component (http://wiki.unity3d.com/index.php?title=DontGoThroughThings).
-/// Uses raycasting to trigger OnTriggerEnter2D events when hitting something.
+/// 3D adaption of the famous DontGoThroughThings component (http://wiki.unity3d.com/index.php?title=DontGoThroughThings).
+/// Uses raycasting to trigger OnTriggerEnter events when hitting something to prevent temporal aliasing (tunneling).
 /// </summary>
 /// <see cref="http://stackoverflow.com/a/29564394/2228771"/>
-public class ProjectileCollisionTrigger2D : MonoBehaviour {
+public class ProjectileCollisionTrigger : MonoBehaviour {
 	public enum TriggerTarget {
 		None = 0,
 		Self = 1,
@@ -45,18 +45,18 @@ public class ProjectileCollisionTrigger2D : MonoBehaviour {
 	
 	private float minimumExtent;
 	private float sqrMinimumExtent;
-	private Vector2 previousPosition;
-	private Rigidbody2D myRigidbody;
-	private Collider2D myCollider;
+	private Vector3 previousPosition;
+	private Rigidbody myRigidbody;
+	private Collider myCollider;
 
 	
 	//initialize values 
 	void Awake()
 	{
-		myRigidbody = GetComponent<Rigidbody2D>();
-		myCollider = GetComponents<Collider2D> ().FirstOrDefault();
+		myRigidbody = GetComponent<Rigidbody>();
+		myCollider = GetComponents<Collider> ().FirstOrDefault();
 		if (myCollider == null || myRigidbody == null) {
-			Debug.LogError("DontGoThroughThings is missing Collider2D or Rigidbody2D component", this);
+			Debug.LogError(GetType().Name + " is missing Collider or Rigidbody component", this);
 			enabled = false;
 			return;
 		}
@@ -70,19 +70,18 @@ public class ProjectileCollisionTrigger2D : MonoBehaviour {
 	{
 		//have we moved more than our minimum extent? 
 		var origPosition = transform.position;
-		Vector2 movementThisStep = (Vector2)transform.position - previousPosition;
+		var movementThisStep = transform.position - previousPosition;
 		float movementSqrMagnitude = movementThisStep.sqrMagnitude;
 		
 		if (movementSqrMagnitude > sqrMinimumExtent) {
 			float movementMagnitude = Mathf.Sqrt(movementSqrMagnitude);
 			
 			//check for obstructions we might have missed 
-			RaycastHit2D[] hitsInfo = Physics2D.RaycastAll(previousPosition, movementThisStep, movementMagnitude, hitLayers.value);
-			
-			//Going backward because we want to look at the first collisions first. Because we want to destroy the once that are closer to previous position
+			RaycastHit[] hitsInfo = Physics.RaycastAll(previousPosition, movementThisStep, movementMagnitude, hitLayers.value);
+
 			for (int i = 0; i < hitsInfo.Length; ++i) {
 				var hitInfo = hitsInfo[i];
-				if (hitInfo && hitInfo.collider != myCollider) {
+				if (hitInfo.collider != null && hitInfo.collider != myCollider) {
 					// apply force
 					if (hitInfo.rigidbody != null && momentumTransferFraction != 0) {
 						// When using impulse mode, the force argument is actually the amount of instantaneous momentum transfered.
@@ -93,12 +92,12 @@ public class ProjectileCollisionTrigger2D : MonoBehaviour {
 						var m = myRigidbody.mass;
 						var dp = dv * m;
 						var impulse = momentumTransferFraction * dp;
-						hitInfo.rigidbody.AddForceAtPosition(impulse, hitInfo.point, ForceMode2D.Impulse);
+						hitInfo.rigidbody.AddForceAtPosition(impulse, hitInfo.point, ForceMode.Impulse);
 
 						if (momentumTransferFraction < 1) {
 							// also apply force to self (in opposite direction)
 							var impulse2 = (1-momentumTransferFraction) * dp;
-							hitInfo.rigidbody.AddForceAtPosition(-impulse2, hitInfo.point, ForceMode2D.Impulse);
+							hitInfo.rigidbody.AddForceAtPosition(-impulse2, hitInfo.point, ForceMode.Impulse);
 						}
 					}
 

@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// Keeps initial position offset to target unconditionally
 /// </summary>
-public class FollowTarget : MonoBehaviour {
+public class StickToTarget : MonoBehaviour {
 	public Transform target;
 	Vector3 posOffset;
 

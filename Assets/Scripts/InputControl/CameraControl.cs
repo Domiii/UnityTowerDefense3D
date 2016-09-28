@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// 用 Input 來控制 Camera
+/// </summary>
 public class CameraControl : MonoBehaviour {
 	public float zoomSpeed = 30;		// meters/second
 	public float tiltSpeed = 30;		// degrees/second

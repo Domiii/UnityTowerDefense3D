@@ -1,5 +1,9 @@
 TODO
-* Player can attack enemy HQ
+* implement Behaviors:
+** Idle (do nothing)
+** AutoAttack, Move, MoveAndAttack, HuntTarget
+* PlayerBrain behaviors: AutoAttack, Move, AttackTarget
+* CreepBrain behaviors: AutoAttack, MoveAndAttack
 * highlight player's current target
 * add Healthbar to Units (slider; billboard; but where to display?)
 * highlight Unit on mouse hover
@@ -19,12 +23,14 @@ TODO
 * Towers
 * auto attack (when player idle, start automatically attacking nearby enemies)
 * TODO: More exciting things to do on the map to make it more alive, more interactive
-* new TargetType: ground & new bullet: mine
+* add TargetType.Ground & new bullet: mine
+* speech bubbles
 
 
 
 DONE
-* setup basic level, w/ 2 HQs + player
+* setup basic level, w/ PlayerHQ, EnemyHQ and Player
 * Navmesh + Player navigation
 * Camera controls - [tilt] up+down, [zoom] scrollwheel
 * Action handling (Move, Attack, Idle)
+* Player can attack enemy HQ

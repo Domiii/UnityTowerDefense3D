@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(ActionHandler))]
+
+/// <summary>
+/// 用 Input 來控制 Player 的 行為
+/// </summary>
 public class PlayerControl : MonoBehaviour {
-	public Vector3 currentDestination;
+	bool isMoving;
 
-	ActionHandler actionHandler;
-
-	void Start () 
-	{
-		actionHandler = GetComponent<ActionHandler> ();
+	public Actions.Action NextAction {
+		get;
+		private set;
 	}
 
 	void Update()
@@ -40,6 +41,8 @@ public class PlayerControl : MonoBehaviour {
 
 	void HandleCursorRay (RaycastHit hit, bool clicked)
 	{
+		NextAction = null;
+		isMoving = false;
 		if (clicked) {
 			// clicking -> attack or move
 			var go = hit.collider.gameObject;
@@ -47,22 +50,24 @@ public class PlayerControl : MonoBehaviour {
 
 			if (unit != null) {
 				// clicked a unit -> attack if enemy
-				actionHandler.Dispatch (new Actions.Attack {
-					Target = unit
-				});
+				// TODO: Move to Unit, then start attacking
+				NextAction = new Actions.Attack {
+					target = unit
+				};
 			} else {
-				// did not click on a unit -> just move
-				actionHandler.Dispatch (new Actions.Move {
-					Destination = hit.point
-				});
+				// did not click on a unit -> start moving
+				NextAction = new Actions.Move {
+					destination = hit.point
+				};
+				isMoving = true;
 			}
 		}
 		else {
 			// dragging -> keep moving, if already moving
-			if (actionHandler.LastAction is Actions.Move) {
-				actionHandler.Dispatch (new Actions.Move {
-					Destination = hit.point
-				});
+			if (isMoving) {
+				NextAction = new Actions.Move {
+					destination = hit.point
+				};
 			}
 		}
 	}
