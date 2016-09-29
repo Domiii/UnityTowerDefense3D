@@ -106,13 +106,14 @@ public class Attacker : Actuator {
 	}
 
 	void AttackCurrentTargetUnchecked() {
+		RotateTowardTarget();
+
 		var delay = Time.time - lastShotTime;
 		if (delay < AttackDelay) {
 			// still on cooldown
 			return;
 		}
 
-		RotateTowardTarget();
 		ShootAt (currentTarget);
 	}
 	#endregion
@@ -176,8 +177,9 @@ public class Attacker : Actuator {
 
 	Quaternion GetRotationToward(Transform targetTransform) {
 		Vector3 dir = targetTransform.position - transform.position;
-		var angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg - 90;
-		return Quaternion.AngleAxis(angle, transform.forward);
+		var angle = Mathf.Atan2 (dir.x, dir.z) * Mathf.Rad2Deg;
+		print (angle);
+		return Quaternion.AngleAxis(angle, Vector3.up);
 	}
 	
 	void ResetRotation() {
@@ -196,11 +198,13 @@ public class Attacker : Actuator {
 		}
 		
 		//transform.LookAt ();
-		//transform.rotation = GetRotationToward(currentTarget.transform);
-		var agent = GetComponent<NavMeshAgent>();
+		var turnSpeed = 10.0f;
+		var agent = GetComponent<NavMeshAgent> ();
 		if (agent != null) {
-			agent.SetDestination (currentTarget.transform.position);
+			turnSpeed = agent.angularSpeed;
 		}
+		var targetRotation = GetRotationToward(currentTarget.transform);
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
 	}
 
 	#region Finding + Attacking

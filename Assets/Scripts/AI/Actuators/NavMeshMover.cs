@@ -3,26 +3,28 @@ using System.Collections;
 
 public class NavMeshMover : Actuator {
 	NavMeshAgent agent;
-	bool startedMoving;
+	bool isMoving;
+	bool startedMovingFlag;	// used for internal mini hack
 
 	public bool HasArrived {
 		get;
 		private set;
 	}
 
+	public bool IsMoving {
+		get { return !isMoving; }
+	}
+
 	void Awake() {
 		agent = GetComponent<NavMeshAgent> ();
-		agent.updatePosition = false;
 	}
 
 	public Vector3 CurrentDestination {
 		get { return agent.destination; }
 		set {
-			if (!agent.updatePosition) {
+			if (!isMoving) {
 				// start moving!
-				agent.updatePosition = true;
-				HasArrived = false;
-				startedMoving = false;
+				OnStartMove();
 			}
 
 			// update position
@@ -32,18 +34,28 @@ public class NavMeshMover : Actuator {
 		}
 	}
 
+	void OnStartMove() {
+		if (!isMoving) {
+			HasArrived = false;
+			startedMovingFlag = false;
+			isMoving = true;
+			agent.Resume ();
+		}
+	}
+
 	public void StopMove() { 
-		if (agent.updatePosition) {
-			agent.updatePosition = false;
+		if (isMoving) {
 			HasArrived = true;
+			isMoving = false;
+			agent.Stop ();
 		}
 	}
 
 	void LateUpdate() {
-		if (agent.updatePosition) {
-			if (!startedMoving) {
+		if (isMoving) {
+			if (!startedMovingFlag) {
 				// hackfix: during the first update cycle after assigning a target, remainingDistance is still 0!
-				startedMoving = true;
+				startedMovingFlag = true;
 			} else {
 				if (agent.remainingDistance <= agent.stoppingDistance) {
 					// done!
