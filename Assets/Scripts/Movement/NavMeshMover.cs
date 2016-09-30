@@ -3,13 +3,18 @@ using System.Collections;
 
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class MoveToPoint : Actuator {
+public class NavMeshMover : Actuator {
 	protected NavMeshAgent agent;
 
 	bool isMoving;
 	bool startedMovingFlag;	// used for internal mini hack
 
 	#region Public
+	public bool StopMovingAtDestination {
+		get;
+		set;
+	}
+
 	public bool HasArrived {
 		get;
 		private set;
@@ -55,6 +60,7 @@ public class MoveToPoint : Actuator {
 	}
 
 	void Awake() {
+		StopMovingAtDestination = true;
 		agent = GetComponent<NavMeshAgent> ();
 	}
 
@@ -69,7 +75,7 @@ public class MoveToPoint : Actuator {
 			if (!startedMovingFlag) {
 				// hackfix: during the first update cycle after assigning a target, remainingDistance is still 0!
 				startedMovingFlag = true;
-			} else {
+			} else if (StopMovingAtDestination) {
 				if (agent.remainingDistance <= agent.stoppingDistance) {
 					// done!
 					StopMove();

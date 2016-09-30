@@ -5,12 +5,12 @@ namespace Behaviors {
 	/// <summary>
 	/// Move to destination, don't let anything distract you from that.
 	/// </summary>
-	[RequireComponent(typeof(MoveToPoint))]
+	[RequireComponent(typeof(NavMeshMover))]
 	public class MoveToPosition : AIBehavior {
-		MoveToPoint mover;
+		NavMeshMover mover;
 
 		void Awake () {
-			mover = GetComponent<MoveToPoint> ();
+			mover = GetComponent<NavMeshMover> ();
 		}
 
 		#region Public
@@ -22,6 +22,7 @@ namespace Behaviors {
 
 		public void StartBehavior(Vector3 pos) {
 			mover.CurrentDestination = pos;
+			mover.StopMovingAtDestination = true;
 		}
 		#endregion
 

@@ -6,10 +6,10 @@ namespace Behaviors {
 	/// Attack when close enough; else move and catch up
 	/// </summary>
 	[RequireComponent(typeof(Attacker))]
-	[RequireComponent(typeof(MoveToPoint))]
+	[RequireComponent(typeof(NavMeshMover))]
 	public class HuntTarget : AIBehavior {
 		Attacker attacker;
-		MoveToPoint mover;
+		NavMeshMover mover;
 
 		#region Public
 		public Unit CurrentTarget {
@@ -20,12 +20,13 @@ namespace Behaviors {
 
 		public void StartBehavior(Unit target) {
 			attacker.CurrentTarget = target;
+			mover.StopMovingAtDestination = false;
 		}
 		#endregion
 
 		void Awake () {
 			attacker = GetComponent<Attacker> ();
-			mover = GetComponent<MoveToPoint> ();
+			mover = GetComponent<NavMeshMover> ();
 		}
 
 		void Update () {

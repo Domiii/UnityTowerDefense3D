@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 
 
-public class NavMeshPathFollower : MoveToPoint {
+public class NavMeshPathFollower : NavMeshMover {
 	public Path path;
 	public Path.FollowDirection direction;
 	public Path.RepeatMode mode;

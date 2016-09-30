@@ -55,6 +55,7 @@ public class ProjectileCollisionTrigger : MonoBehaviour {
 	{
 		myRigidbody = GetComponent<Rigidbody>();
 		myCollider = GetComponents<Collider> ().FirstOrDefault();
+		myCollider = myCollider ?? transform.GetComponentInChildren<Collider> ();
 		if (myCollider == null || myRigidbody == null) {
 			Debug.LogError(GetType().Name + " is missing Collider or Rigidbody component", this);
 			enabled = false;
