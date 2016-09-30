@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NavMeshMover : Actuator {
-	NavMeshAgent agent;
+
+[RequireComponent(typeof(NavMeshAgent))]
+public class MoveToPoint : Actuator {
+	protected NavMeshAgent agent;
+
 	bool isMoving;
 	bool startedMovingFlag;	// used for internal mini hack
 
+	#region Public
 	public bool HasArrived {
 		get;
 		private set;
@@ -15,16 +19,12 @@ public class NavMeshMover : Actuator {
 		get { return !isMoving; }
 	}
 
-	void Awake() {
-		agent = GetComponent<NavMeshAgent> ();
-	}
-
 	public Vector3 CurrentDestination {
 		get { return agent.destination; }
 		set {
 			if (!isMoving) {
 				// start moving!
-				OnStartMove();
+				StartMove();
 			}
 
 			// update position
@@ -34,21 +34,34 @@ public class NavMeshMover : Actuator {
 		}
 	}
 
-	void OnStartMove() {
-		if (!isMoving) {
-			HasArrived = false;
-			startedMovingFlag = false;
-			isMoving = true;
-			agent.Resume ();
-		}
-	}
-
 	public void StopMove() { 
 		if (isMoving) {
 			HasArrived = true;
 			isMoving = false;
 			agent.Stop ();
+			OnStopMove ();
 		}
+	}
+	#endregion
+
+	void StartMove() {
+		if (!isMoving) {
+			HasArrived = false;
+			startedMovingFlag = false;
+			isMoving = true;
+			agent.Resume ();
+			OnStartMove ();
+		}
+	}
+
+	void Awake() {
+		agent = GetComponent<NavMeshAgent> ();
+	}
+
+	protected virtual void OnStartMove() {
+	}
+
+	protected virtual void OnStopMove () {
 	}
 
 	void LateUpdate() {

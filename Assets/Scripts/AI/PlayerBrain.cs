@@ -24,27 +24,23 @@ public class PlayerBrain : BaseBrain {
 	void Update () {
 		if (playerControl.NextAction != null) {
 			// change action
-			Decide (playerControl.NextAction);
+			Decide (playerControl.PopAction());
 		} else {
 			// keep doing what we are already doing
 		}
 	}
 
 	void OnFinishedHuntTarget() {
-		print ("Player action: AutoAttack");
 		// go back to AutoAttack
 		CurrentBehavior = autoAttack;
 	}
 
 	void OnFinishedMove() {
-		print ("Player action: AutoAttack");
 		// go back to AutoAttack
 		CurrentBehavior = autoAttack;
 	}
 
 	void Decide(Actions.Action action) {
-		print ("Player action: " + action.Name);
-
 		// determine what player wants to do next
 		if (action is Actions.Attack) {
 			// hunt the given target

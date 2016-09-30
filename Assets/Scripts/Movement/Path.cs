@@ -3,10 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class WavePath : MonoBehaviour {
+public class Path : MonoBehaviour {
 	public enum FollowDirection {
 		Forward,
 		Backward
+	}
+
+	public enum RepeatMode {
+		/// <summary>
+		/// Only follow the path once
+		/// </summary>
+		Once,
+
+		/// <summary>
+		/// When arriving at the end, start from the beginning
+		/// </summary>
+		Repeat,
+
+		/// <summary>
+		/// When arriving at the end, go reverse direction
+		/// </summary>
+		Mirror
 	}
 
 	public IEnumerator<Transform> GetPathEnumerator(FollowDirection direction) {
@@ -20,6 +37,7 @@ public class WavePath : MonoBehaviour {
 		for (var i = 0; i < transform.childCount; ++i) {
 			yield return transform.GetChild(i);
 		}
+		yield return null;
 	}
 	
 	/// <summary>
@@ -29,6 +47,7 @@ public class WavePath : MonoBehaviour {
 		for (var i = transform.childCount-1; i >= 0; --i) {
 			yield return transform.GetChild(i);
 		}
+		yield return null;
 	}
 
 	public Transform FirstPoint {

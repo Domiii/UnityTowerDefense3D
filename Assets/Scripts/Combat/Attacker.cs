@@ -35,7 +35,7 @@ public class Attacker : Actuator {
 	}
 	
 	
-	#region Targeting
+	#region Public
 	public Unit CurrentTarget {
 		get {
 			return currentTarget;
@@ -178,7 +178,6 @@ public class Attacker : Actuator {
 	Quaternion GetRotationToward(Transform targetTransform) {
 		Vector3 dir = targetTransform.position - transform.position;
 		var angle = Mathf.Atan2 (dir.x, dir.z) * Mathf.Rad2Deg;
-		print (angle);
 		return Quaternion.AngleAxis(angle, Vector3.up);
 	}
 	

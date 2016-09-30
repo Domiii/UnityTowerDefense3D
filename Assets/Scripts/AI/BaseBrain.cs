@@ -20,6 +20,8 @@ public class BaseBrain : MonoBehaviour {
 		}
 		protected set {
 			if (currentBehavior != value) {
+				//print ("Player behavior: " + currentBehavior.name);
+
 				// behavior has changed: disable all behaviors and enable new behavior
 				behaviors.ForEach (b => b.enabled = false);
 				value.enabled = true;

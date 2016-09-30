@@ -11,7 +11,7 @@ public class Wave {
 	/// <summary>
 	/// The set of enemies attacking this round.
 	/// </summary>
-	public List<PathFollower> Enemies = new List<PathFollower>();
+	public List<NavMeshPathFollower> Enemies = new List<NavMeshPathFollower>();
 
 	float lastUpdate;
 

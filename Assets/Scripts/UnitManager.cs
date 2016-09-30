@@ -6,8 +6,8 @@ public class UnitManager : MonoBehaviour {
 	private BuyUnitConfig[] buyUnitConfigs;
 
 	public Transform SpawnPoint;
-	public WavePath Path;
-	public WavePath.FollowDirection Direction;
+	public Path Path;
+	public Path.FollowDirection Direction;
 
 	public BuyUnitConfig[] BuyUnitConfigs {
 		get { return buyUnitConfigs; }
@@ -85,9 +85,9 @@ public class UnitManager : MonoBehaviour {
 		var go = (GameObject)Instantiate(unitPrefab, SpawnPoint.position, Quaternion.identity);
 		
 		// set path
-		var pathFollower = go.GetComponent<PathFollower>();
-		pathFollower.Path = Path;
-		pathFollower.PathDirection = Direction;
+		var pathFollower = go.GetComponent<NavMeshPathFollower>();
+		pathFollower.path = Path;
+		pathFollower.direction = Direction;
 		
 		// add faction
 		FactionManager.SetFaction (go, gameObject);

@@ -9,8 +9,8 @@ public class WaveGenerator : MonoBehaviour {
 	/// Time between waves in seconds.
 	/// </summary>
 	public float DelayBetweenWaves = 30;
-	public WavePath Path;
-	public WavePath.FollowDirection PathDirection;
+	public Path Path;
+	public Path.FollowDirection PathDirection;
 	public WaveTemplate[] WaveTemplates;
 	public Text InfoText;
 
@@ -121,8 +121,8 @@ public class WaveGenerator : MonoBehaviour {
 	// start next enemy of given wave
 	public void SpawnNextEnemy(Wave wave) {
 		var followerObj = (GameObject)Instantiate (wave.WaveTemplate.EnemyPrefab, transform.position, Quaternion.identity);
-		var follower = followerObj.GetComponent<PathFollower> ();
-		follower.InitFollower (wave);
+		var follower = followerObj.GetComponent<NavMeshPathFollower> ();
+		follower.SetPath (wave.WaveGenerator.Path, wave.WaveGenerator.PathDirection);
 		wave.Enemies.Add (follower);
 
 		// add faction

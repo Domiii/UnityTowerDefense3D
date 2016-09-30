@@ -13,6 +13,18 @@ public class PlayerControl : MonoBehaviour {
 		private set;
 	}
 
+	/// <summary>
+	/// Get player's intended action and resets NextAction, indicating that the action has been handled.
+	/// </summary>
+	public Actions.Action PopAction() {
+		if (NextAction != null) {
+			var action = NextAction;
+			NextAction = null;
+			return action;
+		}
+		return null;
+	}
+
 	void Update()
 	{
 		CheckClick ();
